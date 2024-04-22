@@ -1,0 +1,7 @@
+"0","-- This SQL chunk creates table airports
+CREATE TABLE airports(
+aid INTEGER AUTO_INCREMENT PRIMARY KEY,
+airportName TEXT NOT NULL ,
+airportState TEXT NOT NULL ,
+airportCode TEXT DEFAULT ''
+);"

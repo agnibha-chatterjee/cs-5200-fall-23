@@ -1,0 +1,907 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Practicum I CS5200},
+  pdfauthor={Agnibha Chatterjee {[}chatterjee.ag@northeastern.edu{]}; Om Agarwal {[}agarwal.o@northeastern.edu{]}},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Practicum I CS5200}
+\author{Agnibha Chatterjee
+{[}\href{mailto:chatterjee.ag@northeastern.edu}{\nolinkurl{chatterjee.ag@northeastern.edu}}{]} \and Om
+Agarwal
+{[}\href{mailto:agarwal.o@northeastern.edu}{\nolinkurl{agarwal.o@northeastern.edu}}{]}}
+\date{Fall 2023}
+
+\begin{document}
+\maketitle
+
+\hypertarget{some-considerations-made}{%
+\paragraph{Some considerations made}\label{some-considerations-made}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  All cells with missing values of N/A's have been converted to Unknown
+\item
+  Missing altitudes have been given the value 999999
+\item
+  Missing dates have been given the value 01/01/1970
+\end{enumerate}
+
+\hypertarget{clearing-r-environment}{%
+\paragraph{Clearing R environment}\label{clearing-r-environment}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{rm}\NormalTok{(}\AttributeTok{list =} \FunctionTok{ls}\NormalTok{())}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{connect-to-database}{%
+\subsection{Connect to Database}\label{connect-to-database}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(RMySQL)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: DBI
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(DBI)}
+
+\NormalTok{db.user }\OtherTok{\textless{}{-}} \StringTok{\textquotesingle{}admin\textquotesingle{}}      
+\NormalTok{db.password }\OtherTok{\textless{}{-}} \StringTok{\textquotesingle{}omagarwal86\textquotesingle{}}
+\NormalTok{db.name }\OtherTok{\textless{}{-}} \StringTok{\textquotesingle{}dbbirdstrikes\textquotesingle{}}
+\NormalTok{db.host }\OtherTok{\textless{}{-}} \StringTok{\textquotesingle{}dbms{-}practicum{-}1.ckaxw7lvptoz.us{-}east{-}2.rds.amazonaws.com\textquotesingle{}}
+\NormalTok{db.port }\OtherTok{\textless{}{-}} \DecValTok{3306}
+
+\NormalTok{dbConn }\OtherTok{\textless{}{-}}  \FunctionTok{dbConnect}\NormalTok{(RMySQL}\SpecialCharTok{::}\FunctionTok{MySQL}\NormalTok{(), }\AttributeTok{user =}\NormalTok{ db.user, }\AttributeTok{password =}\NormalTok{ db.password,}
+                           \AttributeTok{dbname =}\NormalTok{ db.name, }\AttributeTok{host =}\NormalTok{ db.host, }\AttributeTok{port =}\NormalTok{ db.port)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{SET}\NormalTok{ FOREIGN\_KEY\_CHECKS}\OperatorTok{=}\DecValTok{0}\NormalTok{;}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{DROP} \KeywordTok{TABLE} \ControlFlowTok{IF} \KeywordTok{EXISTS}\NormalTok{ flights;}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{DROP} \KeywordTok{TABLE} \ControlFlowTok{IF} \KeywordTok{EXISTS}\NormalTok{ airports;}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{DROP} \KeywordTok{TABLE} \ControlFlowTok{IF} \KeywordTok{EXISTS}\NormalTok{ conditions;}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{DROP} \KeywordTok{TABLE} \ControlFlowTok{IF} \KeywordTok{EXISTS}\NormalTok{ strikes;}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{SET}\NormalTok{ FOREIGN\_KEY\_CHECKS}\OperatorTok{=}\DecValTok{1}\NormalTok{;}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{create-database}{%
+\subsection{Create Database}\label{create-database}}
+
+\hypertarget{question-4.a}{%
+\subsubsection{Question 4.A}\label{question-4.a}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{{-}{-} This SQL chunk creates table flights}
+\KeywordTok{CREATE} \KeywordTok{TABLE}\NormalTok{ flights(}
+\NormalTok{fid }\DataTypeTok{INTEGER} \KeywordTok{PRIMARY} \KeywordTok{KEY}\NormalTok{,}
+\DataTypeTok{date} \DataTypeTok{DATE} \KeywordTok{DEFAULT} \KeywordTok{NULL} \KeywordTok{DEFAULT} \StringTok{\textquotesingle{}1970{-}01{-}01\textquotesingle{}}\NormalTok{,}
+\NormalTok{origin }\DataTypeTok{INTEGER} \KeywordTok{NOT} \KeywordTok{NULL} \KeywordTok{DEFAULT} \DecValTok{999}\NormalTok{,}
+\NormalTok{airline TEXT }\KeywordTok{NOT} \KeywordTok{NULL}\NormalTok{ ,}
+\NormalTok{aircraft TEXT }\KeywordTok{NOT} \KeywordTok{NULL}\NormalTok{ ,}
+\NormalTok{altitude }\DataTypeTok{INTEGER} \KeywordTok{NOT} \KeywordTok{NULL} \KeywordTok{DEFAULT} \DecValTok{999999}\NormalTok{,}
+\NormalTok{heavy }\DataTypeTok{BOOLEAN} \KeywordTok{NOT} \KeywordTok{NULL} \KeywordTok{DEFAULT} \KeywordTok{FALSE}\NormalTok{,}
+\KeywordTok{CHECK}\NormalTok{ (altitude }\OperatorTok{\textgreater{}=} \DecValTok{0}\NormalTok{)}
+\NormalTok{);}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{question-4.b}{%
+\subsubsection{Question 4.B}\label{question-4.b}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{{-}{-} This SQL chunk creates table airports}
+\KeywordTok{CREATE} \KeywordTok{TABLE}\NormalTok{ airports(}
+\NormalTok{aid }\DataTypeTok{INTEGER}\NormalTok{ AUTO\_INCREMENT }\KeywordTok{PRIMARY} \KeywordTok{KEY}\NormalTok{,}
+\NormalTok{airportName TEXT }\KeywordTok{NOT} \KeywordTok{NULL}\NormalTok{ ,}
+\NormalTok{airportState TEXT }\KeywordTok{NOT} \KeywordTok{NULL}\NormalTok{ ,}
+\NormalTok{airportCode TEXT }\KeywordTok{DEFAULT} \StringTok{\textquotesingle{}\textquotesingle{}}
+\NormalTok{);}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{question-4.c}{%
+\subsubsection{Question 4.C}\label{question-4.c}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{{-}{-} This SQL chunk add a foreign key constraint on flights}
+\KeywordTok{ALTER} \KeywordTok{TABLE}\NormalTok{ flights}
+\KeywordTok{ADD} \KeywordTok{CONSTRAINT}\NormalTok{ fk\_origin}
+\KeywordTok{FOREIGN} \KeywordTok{KEY}\NormalTok{ (origin) }\KeywordTok{REFERENCES}\NormalTok{ airports(aid)}
+\KeywordTok{ON} \KeywordTok{DELETE} \KeywordTok{CASCADE}
+\KeywordTok{ON} \KeywordTok{UPDATE} \KeywordTok{CASCADE}\NormalTok{;}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{question-4.d}{%
+\subsubsection{Question 4.D}\label{question-4.d}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{{-}{-} This SQL chunk creates table conditions}
+\KeywordTok{CREATE} \KeywordTok{TABLE}\NormalTok{ conditions(}
+\NormalTok{cid }\DataTypeTok{INTEGER}\NormalTok{ AUTO\_INCREMENT }\KeywordTok{PRIMARY} \KeywordTok{KEY}\NormalTok{,}
+\NormalTok{sky\_condition TEXT }\KeywordTok{NOT} \KeywordTok{NULL}\NormalTok{,}
+\NormalTok{explanation TEXT }\KeywordTok{DEFAULT} \StringTok{\textquotesingle{}\textquotesingle{}}
+\NormalTok{);}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{question-4.e}{%
+\subsubsection{Question 4.E}\label{question-4.e}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{{-}{-} This SQL chunk creates table strikes}
+\KeywordTok{CREATE} \KeywordTok{TABLE}\NormalTok{ strikes(}
+\NormalTok{sid }\DataTypeTok{INTEGER}\NormalTok{ AUTO\_INCREMENT }\KeywordTok{PRIMARY} \KeywordTok{KEY}\NormalTok{,}
+\NormalTok{fid }\DataTypeTok{INTEGER} \KeywordTok{NOT} \KeywordTok{NULL}\NormalTok{,}
+\NormalTok{numbirds }\DataTypeTok{INTEGER} \KeywordTok{NOT} \KeywordTok{NULL}\NormalTok{,}
+\NormalTok{impact TEXT }\KeywordTok{NOT} \KeywordTok{NULL}\NormalTok{ ,}
+\NormalTok{damage TEXT }\KeywordTok{NOT} \KeywordTok{NULL}\NormalTok{,}
+\NormalTok{altitude }\DataTypeTok{INTEGER} \KeywordTok{NOT} \KeywordTok{NULL} \KeywordTok{DEFAULT} \DecValTok{999999}\NormalTok{,}
+\NormalTok{conditions }\DataTypeTok{INTEGER}\NormalTok{,}
+\KeywordTok{CHECK}\NormalTok{ (altitude }\OperatorTok{\textgreater{}=} \DecValTok{0}\NormalTok{),}
+\KeywordTok{CONSTRAINT}\NormalTok{ fk\_conditions}
+\KeywordTok{FOREIGN} \KeywordTok{KEY}\NormalTok{ (conditions) }\KeywordTok{REFERENCES}\NormalTok{ conditions(cid)}
+\KeywordTok{ON} \KeywordTok{DELETE} \KeywordTok{CASCADE}
+\KeywordTok{ON} \KeywordTok{UPDATE} \KeywordTok{CASCADE}
+\NormalTok{);}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{question-4.f}{%
+\subsubsection{Question 4.F}\label{question-4.f}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{{-}{-} This SQL chunk add a foreign key constraint on strikes}
+\KeywordTok{ALTER} \KeywordTok{TABLE}\NormalTok{ strikes}
+\KeywordTok{ADD} \KeywordTok{CONSTRAINT}\NormalTok{ fk\_fid}
+\KeywordTok{FOREIGN} \KeywordTok{KEY}\NormalTok{ (fid) }\KeywordTok{REFERENCES}\NormalTok{ flights(fid)}
+\KeywordTok{ON} \KeywordTok{DELETE} \KeywordTok{CASCADE}
+\KeywordTok{ON} \KeywordTok{UPDATE} \KeywordTok{CASCADE}\NormalTok{;}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{question-4.g}{%
+\subsubsection{Question 4.G}\label{question-4.g}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \KeywordTok{INSERT} \KeywordTok{INTO}\NormalTok{ airports }\KeywordTok{VALUES}\NormalTok{(}\DecValTok{101}\NormalTok{, }\OtherTok{"Temp Airport"}\NormalTok{, }\OtherTok{"Temp State"}\NormalTok{, }\StringTok{\textquotesingle{}\textquotesingle{}}\NormalTok{);}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \KeywordTok{INSERT} \KeywordTok{INTO}\NormalTok{ flights }\KeywordTok{VALUES}\NormalTok{(}\DecValTok{102}\NormalTok{, }\OtherTok{"1980{-}01{-}03"}\NormalTok{, }\DecValTok{101}\NormalTok{, }\OtherTok{"Temp Airline"}\NormalTok{, }\OtherTok{"Temp Aircraft"}\NormalTok{, }\DecValTok{5050}\NormalTok{, }\KeywordTok{FALSE}\NormalTok{);}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \KeywordTok{INSERT} \KeywordTok{INTO}\NormalTok{ conditions }\KeywordTok{VALUES}\NormalTok{(}\DecValTok{301}\NormalTok{, }\OtherTok{"Sunny"}\NormalTok{, }\StringTok{\textquotesingle{}\textquotesingle{}}\NormalTok{);}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \KeywordTok{INSERT} \KeywordTok{INTO}\NormalTok{ strikes }\KeywordTok{VALUES}\NormalTok{(}\DecValTok{401}\NormalTok{, }\DecValTok{102}\NormalTok{, }\DecValTok{500}\NormalTok{, }\OtherTok{"None"}\NormalTok{, }\OtherTok{"No Damage"}\NormalTok{, }\DecValTok{5050}\NormalTok{, }\DecValTok{301}\NormalTok{);}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{question-5-and-6-we-have-read-the-csv-file-from-its-url}{%
+\subsection{Question 5 and 6 (We have read the CSV file from its
+URL)}\label{question-5-and-6-we-have-read-the-csv-file-from-its-url}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# This r chunk reads the csv and populates the tables}
+
+\CommentTok{\# Reading the csv file from its url}
+\NormalTok{bds.raw }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\FunctionTok{url}\NormalTok{(}\StringTok{"https://s3.us{-}east{-}2.amazonaws.com/artificium.us/datasets/BirdStrikesData{-}V2.csv"}\NormalTok{))}
+\NormalTok{bds.airports }\OtherTok{\textless{}{-}}\NormalTok{ bds.raw[, }\FunctionTok{c}\NormalTok{(}\StringTok{"airport"}\NormalTok{, }\StringTok{"origin"}\NormalTok{)]}
+\CommentTok{\# Replacing all N/A and \textquotesingle{}\textquotesingle{} with Unknown}
+\NormalTok{bds.airports[] }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(bds.airports, }\ControlFlowTok{function}\NormalTok{(col) }\FunctionTok{ifelse}\NormalTok{(col }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}N/A\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}\textquotesingle{}}\NormalTok{), }\StringTok{\textquotesingle{}Unknown\textquotesingle{}}\NormalTok{, col))}
+
+  \CommentTok{\# Table Airports}
+  \CommentTok{\# Grouping airports by their state}
+\NormalTok{  grouped.bds.airports }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(}\FunctionTok{split}\NormalTok{(bds.airports, bds.airports}\SpecialCharTok{$}\NormalTok{origin), unique)}
+  \CommentTok{\# Merging each group}
+\NormalTok{  airports }\OtherTok{\textless{}{-}} \FunctionTok{do.call}\NormalTok{(rbind, grouped.bds.airports)}
+  \FunctionTok{row.names}\NormalTok{(airports) }\OtherTok{\textless{}{-}} \ConstantTok{NULL}
+  \FunctionTok{colnames}\NormalTok{(airports) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"airportName"}\NormalTok{, }\StringTok{"airportState"}\NormalTok{)}
+\NormalTok{  n.airports }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(airports)}
+\NormalTok{  airports}\SpecialCharTok{$}\NormalTok{aid }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{:}\NormalTok{n.airports}
+
+  
+   \CommentTok{\# Table Flights}
+\NormalTok{   bds.flights }\OtherTok{\textless{}{-}}\NormalTok{ bds.raw[, }\FunctionTok{c}\NormalTok{(}\StringTok{"rid"}\NormalTok{, }\StringTok{"flight\_date"}\NormalTok{, }\StringTok{"airport"}\NormalTok{, }\StringTok{"origin"}\NormalTok{, }\StringTok{"airline"}\NormalTok{, }\StringTok{"aircraft"}\NormalTok{, }\StringTok{"altitude\_ft"}\NormalTok{, }\StringTok{"heavy\_flag"}\NormalTok{)]}
+\NormalTok{  bds.flights}\SpecialCharTok{$}\NormalTok{origin }\OtherTok{\textless{}{-}}\NormalTok{ bds.airports}\SpecialCharTok{$}\NormalTok{origin}
+\NormalTok{  bds.flights}\SpecialCharTok{$}\NormalTok{airport }\OtherTok{\textless{}{-}}\NormalTok{ bds.airports}\SpecialCharTok{$}\NormalTok{airport}
+  \FunctionTok{colnames}\NormalTok{(bds.flights) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"fid"}\NormalTok{, }\StringTok{"date"}\NormalTok{, }\StringTok{"airport"}\NormalTok{, }\StringTok{"origin"}\NormalTok{, }\StringTok{"airline"}\NormalTok{, }\StringTok{"aircraft"}\NormalTok{, }\StringTok{"altitude"}\NormalTok{, }\StringTok{"heavy"}\NormalTok{)}
+  \CommentTok{\# Replacing all empty values with Unknown}
+\NormalTok{  bds.flights[] }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(bds.flights, }\ControlFlowTok{function}\NormalTok{(col) }\FunctionTok{ifelse}\NormalTok{(col }\SpecialCharTok{==} \StringTok{\textquotesingle{}\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Unknown\textquotesingle{}}\NormalTok{, col))}
+\NormalTok{  n.flights }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(bds.flights)}
+  
+  \CommentTok{\# Function to format dates}
+\NormalTok{  clean\_date }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(date) \{}
+    \ControlFlowTok{if}\NormalTok{ (date }\SpecialCharTok{==} \StringTok{\textquotesingle{}Unknown\textquotesingle{}}\NormalTok{) \{}
+      \FunctionTok{return}\NormalTok{(}\StringTok{"1970{-}01{-}01"}\NormalTok{)}
+\NormalTok{    \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{      split.timestamp }\OtherTok{\textless{}{-}} \FunctionTok{strsplit}\NormalTok{(date, }\StringTok{" "}\NormalTok{)}
+\NormalTok{      split.date }\OtherTok{\textless{}{-}} \FunctionTok{unlist}\NormalTok{(}\FunctionTok{strsplit}\NormalTok{(split.timestamp[[}\DecValTok{1}\NormalTok{]][}\DecValTok{1}\NormalTok{], }\StringTok{\textquotesingle{}/\textquotesingle{}}\NormalTok{))}
+\NormalTok{      split.date[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{] }\OtherTok{\textless{}{-}} \FunctionTok{sprintf}\NormalTok{(}\StringTok{"\%02d"}\NormalTok{, }\FunctionTok{as.integer}\NormalTok{(split.date[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{]))}
+      \FunctionTok{return}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(split.date[}\DecValTok{3}\NormalTok{], }\StringTok{"{-}"}\NormalTok{, split.date[}\DecValTok{1}\NormalTok{], }\StringTok{"{-}"}\NormalTok{, split.date[}\DecValTok{2}\NormalTok{]))}
+\NormalTok{    \}}
+\NormalTok{  \}}
+
+  \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{n.flights) \{}
+  \CommentTok{\# Setting origin in flights from the airports dataframe}
+\NormalTok{  bds.flights}\SpecialCharTok{$}\NormalTok{origin[i] }\OtherTok{\textless{}{-}} \FunctionTok{which}\NormalTok{(airports}\SpecialCharTok{$}\NormalTok{airportName }\SpecialCharTok{==}\NormalTok{ bds.flights}\SpecialCharTok{$}\NormalTok{airport[i] }\SpecialCharTok{\&}\NormalTok{ airports}\SpecialCharTok{$}\NormalTok{airportState }\SpecialCharTok{==}\NormalTok{ bds.flights}\SpecialCharTok{$}\NormalTok{origin[i])}
+  
+\NormalTok{  bds.flights}\SpecialCharTok{$}\NormalTok{date[i] }\OtherTok{\textless{}{-}} \FunctionTok{clean\_date}\NormalTok{(bds.flights}\SpecialCharTok{$}\NormalTok{date[i])}
+
+  \CommentTok{\# Replacing * in airline name (UNITED AIRWAYS* {-}\textgreater{} UNITED AIRWAYS)}
+\NormalTok{  bds.flights}\SpecialCharTok{$}\NormalTok{airline[i] }\OtherTok{\textless{}{-}} \FunctionTok{gsub}\NormalTok{(}\StringTok{"*"}\NormalTok{, }\StringTok{""}\NormalTok{, bds.flights}\SpecialCharTok{$}\NormalTok{airline[i])}
+  \ControlFlowTok{if}\NormalTok{ (bds.flights}\SpecialCharTok{$}\NormalTok{altitude[i] }\SpecialCharTok{==} \StringTok{\textquotesingle{}Unknown\textquotesingle{}}\NormalTok{) \{}
+    \CommentTok{\# Setting Unknown altitudes to a value of 999999}
+\NormalTok{    bds.flights}\SpecialCharTok{$}\NormalTok{altitude[i] }\OtherTok{\textless{}{-}} \DecValTok{999999}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+    \CommentTok{\# Removing comma from flights}
+\NormalTok{    bds.flights}\SpecialCharTok{$}\NormalTok{altitude[i] }\OtherTok{\textless{}{-}} \FunctionTok{as.integer}\NormalTok{(}\FunctionTok{gsub}\NormalTok{(}\StringTok{","}\NormalTok{, }\StringTok{""}\NormalTok{, bds.flights}\SpecialCharTok{$}\NormalTok{altitude[i]))}
+\NormalTok{  \}}
+\NormalTok{  bds.flights}\SpecialCharTok{$}\NormalTok{heavy[i] }\OtherTok{\textless{}{-}} \SpecialCharTok{!}\FunctionTok{grepl}\NormalTok{(}\StringTok{"Unknown|No"}\NormalTok{, bds.flights}\SpecialCharTok{$}\NormalTok{heavy[i])}
+  
+\NormalTok{  \}}
+\NormalTok{  bds.flights}\SpecialCharTok{$}\NormalTok{airport }\OtherTok{\textless{}{-}} \ConstantTok{NULL}
+\NormalTok{  bds.flights}\SpecialCharTok{$}\NormalTok{fid }\OtherTok{\textless{}{-}} \FunctionTok{as.integer}\NormalTok{(bds.flights}\SpecialCharTok{$}\NormalTok{fid)}
+\NormalTok{  bds.flights}\SpecialCharTok{$}\NormalTok{origin }\OtherTok{\textless{}{-}} \FunctionTok{as.integer}\NormalTok{(bds.flights}\SpecialCharTok{$}\NormalTok{origin)}
+\NormalTok{  bds.flights}\SpecialCharTok{$}\NormalTok{altitude }\OtherTok{\textless{}{-}} \FunctionTok{as.integer}\NormalTok{(bds.flights}\SpecialCharTok{$}\NormalTok{altitude)}
+  
+
+  \CommentTok{\# Table Conditions}
+\NormalTok{  bds.conditions }\OtherTok{\textless{}{-}}\NormalTok{ bds.raw[, }\FunctionTok{c}\NormalTok{(}\StringTok{"sky\_conditions"}\NormalTok{, }\StringTok{"Remarks"}\NormalTok{)]}
+  \CommentTok{\# Removing duplicate values from the bds.conditions dataframe}
+\NormalTok{  bds.conditions }\OtherTok{\textless{}{-}}\NormalTok{ bds.conditions[}\SpecialCharTok{!}\FunctionTok{duplicated}\NormalTok{(bds.conditions}\SpecialCharTok{$}\NormalTok{sky\_conditions), ]}
+\NormalTok{  bds.conditions}\SpecialCharTok{$}\NormalTok{cid }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(bds.conditions)}
+\NormalTok{  bds.conditions}\SpecialCharTok{$}\NormalTok{Remarks }\OtherTok{\textless{}{-}} \ConstantTok{NULL}
+  \CommentTok{\# renaming columns}
+  \FunctionTok{colnames}\NormalTok{(bds.conditions) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"sky\_condition"}\NormalTok{, }\StringTok{"cid"}\NormalTok{)}
+  
+  \CommentTok{\# Table Strikes}
+\NormalTok{  bds.strikes }\OtherTok{\textless{}{-}}\NormalTok{ bds.raw[, }\FunctionTok{c}\NormalTok{(}\StringTok{"wildlife\_struck"}\NormalTok{, }\StringTok{"impact"}\NormalTok{, }\StringTok{"damage"}\NormalTok{, }\StringTok{"sky\_conditions"}\NormalTok{)]}
+\NormalTok{  bds.strikes}\SpecialCharTok{$}\NormalTok{fid }\OtherTok{\textless{}{-}}\NormalTok{ bds.flights}\SpecialCharTok{$}\NormalTok{fid}
+\NormalTok{  bds.strikes}\SpecialCharTok{$}\NormalTok{altitude }\OtherTok{\textless{}{-}}\NormalTok{ bds.flights}\SpecialCharTok{$}\NormalTok{altitude}
+  \CommentTok{\# renaming columns}
+  \FunctionTok{colnames}\NormalTok{(bds.strikes) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"numbirds"}\NormalTok{, }\StringTok{"impact"}\NormalTok{, }\StringTok{"damage"}\NormalTok{, }\StringTok{"conditions"}\NormalTok{, }\StringTok{"fid"}\NormalTok{, }\StringTok{"altitude"}\NormalTok{)}
+\NormalTok{  bds.strikes[] }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(bds.strikes, }\ControlFlowTok{function}\NormalTok{(col) }\FunctionTok{ifelse}\NormalTok{(col }\SpecialCharTok{==} \StringTok{\textquotesingle{}\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Unknown\textquotesingle{}}\NormalTok{, col))}
+  
+  \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(bds.strikes)) \{}
+    \CommentTok{\# Setting conditions to its correct cid value}
+\NormalTok{      bds.strikes}\SpecialCharTok{$}\NormalTok{conditions[i] }\OtherTok{\textless{}{-}} \FunctionTok{which}\NormalTok{(bds.conditions}\SpecialCharTok{$}\NormalTok{sky\_condition }\SpecialCharTok{==}\NormalTok{ bds.strikes}\SpecialCharTok{$}\NormalTok{conditions[i])}
+\NormalTok{  \}}
+\NormalTok{  bds.strikes}\SpecialCharTok{$}\NormalTok{conditions }\OtherTok{\textless{}{-}} \FunctionTok{as.integer}\NormalTok{(bds.strikes}\SpecialCharTok{$}\NormalTok{conditions)}
+\NormalTok{  bds.strikes}\SpecialCharTok{$}\NormalTok{numbirds }\OtherTok{\textless{}{-}} \FunctionTok{as.integer}\NormalTok{(bds.strikes}\SpecialCharTok{$}\NormalTok{numbirds)}
+\NormalTok{  bds.strikes}\SpecialCharTok{$}\NormalTok{sid }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(bds.strikes)}
+  
+  \CommentTok{\# Writing to table}
+  \FunctionTok{dbWriteTable}\NormalTok{(dbConn, }\StringTok{"airports"}\NormalTok{, airports, }\AttributeTok{append =}\NormalTok{ T, }\AttributeTok{row.names =}\NormalTok{ F)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \FunctionTok{dbWriteTable}\NormalTok{(dbConn, }\StringTok{"flights"}\NormalTok{, bds.flights, }\AttributeTok{append =}\NormalTok{ T, }\AttributeTok{row.names =}\NormalTok{ F)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \FunctionTok{dbWriteTable}\NormalTok{(dbConn, }\StringTok{"conditions"}\NormalTok{, bds.conditions, }\AttributeTok{append =}\NormalTok{ T, }\AttributeTok{row.names =}\NormalTok{ F)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \FunctionTok{dbWriteTable}\NormalTok{(dbConn, }\StringTok{"strikes"}\NormalTok{, bds.strikes, }\AttributeTok{append =}\NormalTok{ T, }\AttributeTok{row.names =}\NormalTok{ F)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# For testing we inserted only 500 rows}
+\CommentTok{\# for (i in 1:500) \{}
+\CommentTok{\#     sql \textless{}{-} sprintf(\textquotesingle{}INSERT INTO flights VALUES (\%d, "\%s", \%d, "\%s", "\%s", \%d, \%s)\textquotesingle{}, bds.flights$fid[i], bds.flights$date[i], bds.flights$origin[i], bds.flights$airline[i], bds.flights$aircraft[i], bds.flights$altitude[i], bds.flights$heavy[i])}
+\CommentTok{\# }
+\CommentTok{\#   dbSendStatement(conn = dbConn, statement = sql)}
+\CommentTok{\# \}}
+\CommentTok{\# }
+\CommentTok{\#   dbWriteTable(dbConn, "conditions", bds.conditions, append = T, row.names = F)}
+\CommentTok{\# }
+\CommentTok{\# for (i in 1:500) \{}
+\CommentTok{\#     sqlStmt \textless{}{-} sprintf(\textquotesingle{}INSERT INTO strikes(fid, numbirds, impact, damage, altitude, conditions) VALUES (\%d, \%d, "\%s", "\%s", \%d, \%d)\textquotesingle{}, bds.strikes$fid[i], bds.strikes$numbirds[i], bds.strikes$impact[i], bds.strikes$damage[i], bds.strikes$altitude[i], bds.strikes$conditions[i])}
+\CommentTok{\#     nr \textless{}{-} dbSendStatement(conn = dbConn, statement = sqlStmt)}
+\CommentTok{\# \}}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{question-7}{%
+\subsection{Question 7}\label{question-7}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{SELECT} \OperatorTok{*} \KeywordTok{FROM}\NormalTok{ flights }\KeywordTok{LIMIT} \DecValTok{5}\NormalTok{;}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}rlrllrr@{}}
+\caption{5 records}\tabularnewline
+\toprule\noalign{}
+fid & date & origin & airline & aircraft & altitude & heavy \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+fid & date & origin & airline & aircraft & altitude & heavy \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1195 & 2002-11-13 & 412 & MILITARY & Airplane & 2000 & 0 \\
+3019 & 2002-10-10 & 150 & MILITARY & Airplane & 400 & 0 \\
+3500 & 2001-05-15 & 412 & MILITARY & Airplane & 1000 & 0 \\
+3504 & 2001-05-23 & 412 & MILITARY & Airplane & 1800 & 0 \\
+3597 & 2001-04-18 & 852 & MILITARY & Airplane & 200 & 0 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{SELECT} \OperatorTok{*} \KeywordTok{FROM}\NormalTok{ airports }\KeywordTok{LIMIT} \DecValTok{5}\NormalTok{;}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llll@{}}
+\caption{5 records}\tabularnewline
+\toprule\noalign{}
+aid & airportName & airportState & airportCode \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+aid & airportName & airportState & airportCode \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1 & BIRMINGHAM-SHUTTLESWORTH INTL & Alabama & NA \\
+2 & TROY MUNICIPAL ARPT & Alabama & NA \\
+3 & HUNTSVILLE INTL & Alabama & NA \\
+4 & MONTGOMERY REGIONAL ARPT & Alabama & NA \\
+5 & MOBILE DOWNTOWN ARPT & Alabama & NA \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{SELECT} \OperatorTok{*} \KeywordTok{FROM}\NormalTok{ conditions }\KeywordTok{LIMIT} \DecValTok{5}\NormalTok{;}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lll@{}}
+\caption{3 records}\tabularnewline
+\toprule\noalign{}
+cid & sky\_condition & explanation \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+cid & sky\_condition & explanation \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1 & No Cloud & NA \\
+2 & Some Cloud & NA \\
+3 & Overcast & NA \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{SELECT} \OperatorTok{*} \KeywordTok{FROM}\NormalTok{ strikes }\KeywordTok{LIMIT} \DecValTok{5}\NormalTok{;}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.0526}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.0921}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1184}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.2895}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1842}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1184}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1447}}@{}}
+\caption{5 records}\tabularnewline
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+sid
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+fid
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+numbirds
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+impact
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+damage
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+altitude
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+conditions
+\end{minipage} \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+sid
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+fid
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+numbirds
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+impact
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+damage
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+altitude
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+conditions
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1 & 202152 & 859 & Engine Shut Down & Caused damage & 1500 & 1 \\
+2 & 208159 & 424 & None & Caused damage & 0 & 2 \\
+3 & 207601 & 261 & None & No damage & 50 & 1 \\
+4 & 215953 & 806 & Precautionary Landing & No damage & 50 & 2 \\
+5 & 219878 & 942 & None & No damage & 50 & 1 \\
+\end{longtable}
+
+\hypertarget{question-8}{%
+\subsection{Question 8}\label{question-8}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# }\KeywordTok{The}\NormalTok{ idea }\KeywordTok{in}\NormalTok{ this }\KeywordTok{query}\NormalTok{ was }\KeywordTok{to} \KeywordTok{JOIN}\NormalTok{ strikes, flights }\KeywordTok{and}\NormalTok{ airport }\KeywordTok{on}\NormalTok{ their respective }\KeywordTok{primary}\NormalTok{ keys}
+\KeywordTok{SELECT}\NormalTok{ a.airportState, }\FunctionTok{COUNT}\NormalTok{(}\OperatorTok{*}\NormalTok{) }\KeywordTok{as}\NormalTok{ no\_of\_impacts}
+\KeywordTok{FROM}\NormalTok{ strikes s}
+\KeywordTok{JOIN}\NormalTok{ flights f }\KeywordTok{ON}\NormalTok{ f.fid }\OperatorTok{=}\NormalTok{ s.fid}
+\KeywordTok{JOIN}\NormalTok{ airports a }\KeywordTok{on}\NormalTok{ a.aid }\OperatorTok{=}\NormalTok{ f.origin}
+\KeywordTok{GROUP} \KeywordTok{BY}\NormalTok{ a.airportState}
+\KeywordTok{ORDER} \KeywordTok{BY} \FunctionTok{COUNT}\NormalTok{(}\OperatorTok{*}\NormalTok{) }\KeywordTok{DESC}
+\KeywordTok{LIMIT} \DecValTok{10}\NormalTok{;}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lr@{}}
+\caption{Displaying records 1 - 10}\tabularnewline
+\toprule\noalign{}
+airportState & no\_of\_impacts \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+airportState & no\_of\_impacts \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+California & 2520 \\
+Texas & 2453 \\
+Florida & 2055 \\
+New York & 1319 \\
+Illinois & 1008 \\
+Pennsylvania & 986 \\
+Missouri & 960 \\
+Kentucky & 812 \\
+Ohio & 778 \\
+Hawaii & 729 \\
+\end{longtable}
+
+\hypertarget{question-9}{%
+\subsection{Question 9}\label{question-9}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# }\KeywordTok{The}\NormalTok{ idea was }\KeywordTok{to}\NormalTok{ find }\KeywordTok{the} \FunctionTok{count} \KeywordTok{of} \KeywordTok{each}\NormalTok{ airline, give }\KeywordTok{the} \FunctionTok{count} \KeywordTok{column}\NormalTok{ an alias }\KeywordTok{and}\NormalTok{ find }\KeywordTok{the}\NormalTok{ average }\KeywordTok{of}\NormalTok{ this }\FunctionTok{count} \KeywordTok{column}\NormalTok{, this would }\ControlFlowTok{then}\NormalTok{ be used }\KeywordTok{to}\NormalTok{ find airline }\KeywordTok{having}\NormalTok{ a }\FunctionTok{count}\NormalTok{ greater }\KeywordTok{than} \KeywordTok{the}\NormalTok{ average }\FunctionTok{count}
+\KeywordTok{SELECT}\NormalTok{ airline, }\FunctionTok{COUNT}\NormalTok{(f.fid) }\KeywordTok{AS}\NormalTok{ num\_bird\_strikes}
+\KeywordTok{FROM}\NormalTok{ flights f}
+\KeywordTok{JOIN}\NormalTok{ strikes s }\KeywordTok{ON}\NormalTok{ s.fid }\OperatorTok{=}\NormalTok{ f.fid}
+\KeywordTok{GROUP} \KeywordTok{BY}\NormalTok{ f.airline}
+\KeywordTok{HAVING} \FunctionTok{COUNT}\NormalTok{(}\OperatorTok{*}\NormalTok{) }\OperatorTok{\textgreater{}} 
+\NormalTok{            (}\KeywordTok{SELECT} \FunctionTok{AVG}\NormalTok{(}\FunctionTok{count}\NormalTok{) }
+              \KeywordTok{FROM}\NormalTok{ (}\KeywordTok{SELECT} \FunctionTok{COUNT}\NormalTok{(}\OperatorTok{*}\NormalTok{) }\KeywordTok{AS} \FunctionTok{count} \KeywordTok{FROM}\NormalTok{ strikes st }\KeywordTok{JOIN}\NormalTok{ flights fg }\KeywordTok{ON}\NormalTok{ fg.fid }\OperatorTok{=}\NormalTok{ st.fid }\KeywordTok{GROUP} \KeywordTok{BY}\NormalTok{ fg.airline) }\KeywordTok{AS} \FunctionTok{avg}\NormalTok{)}
+\KeywordTok{ORDER} \KeywordTok{BY}\NormalTok{ num\_bird\_strikes }\KeywordTok{DESC}\NormalTok{;}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lr@{}}
+\caption{Displaying records 1 - 10}\tabularnewline
+\toprule\noalign{}
+airline & num\_bird\_strikes \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+airline & num\_bird\_strikes \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+SOUTHWEST AIRLINES & 4628 \\
+BUSINESS & 3074 \\
+AMERICAN AIRLINES & 2058 \\
+DELTA AIR LINES & 1349 \\
+AMERICAN EAGLE AIRLINES & 932 \\
+SKYWEST AIRLINES & 891 \\
+US AIRWAYS* & 797 \\
+JETBLUE AIRWAYS & 708 \\
+UPS AIRLINES & 590 \\
+US AIRWAYS & 540 \\
+\end{longtable}
+
+\hypertarget{question-10}{%
+\subsection{Question 10}\label{question-10}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# The idea here was to join strikes and flights on sid and then perform the grouping}
+\CommentTok{\# As the missing dates have the value 1970{-}01{-}01, we\textquotesingle{}ve excluded them from the result of this query}
+\NormalTok{query }\OtherTok{\textless{}{-}} \StringTok{"SELECT MONTHNAME(f.date) AS month\_name, SUM(s.numbirds) AS cnt}
+\StringTok{FROM flights f}
+\StringTok{JOIN strikes s ON s.fid = f.fid AND YEAR(f.date) \textgreater{} 1970}
+\StringTok{GROUP BY month\_name}
+\StringTok{ORDER BY cnt DESC;"}
+
+\NormalTok{total.per.month }\OtherTok{\textless{}{-}} \FunctionTok{dbGetQuery}\NormalTok{(}\AttributeTok{conn =}\NormalTok{ dbConn, }\AttributeTok{statement =}\NormalTok{ query)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as
+## numeric
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{head}\NormalTok{(total.per.month, }\AttributeTok{n =} \DecValTok{6}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   month_name   cnt
+## 1     August 11013
+## 2       July  9344
+## 3  September  9201
+## 4    October  7277
+## 5   November  6306
+## 6       June  5209
+\end{verbatim}
+
+\hypertarget{question-11}{%
+\subsection{Question 11}\label{question-11}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total.per.month }\OtherTok{\textless{}{-}} \FunctionTok{na.omit}\NormalTok{(total.per.month)}
+\FunctionTok{barplot}\NormalTok{(total.per.month}\SpecialCharTok{$}\NormalTok{cnt, }\AttributeTok{main =} \StringTok{"Monthly Bird Strike Count"}\NormalTok{, }\AttributeTok{xlab =} \StringTok{"Month"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"No.of Birds"}\NormalTok{, }\AttributeTok{col =} \StringTok{"darkgreen"}\NormalTok{, }\AttributeTok{ylim =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{15000}\NormalTok{))}
+\FunctionTok{legend}\NormalTok{(}\StringTok{"topright"}\NormalTok{, }\AttributeTok{legend =} \StringTok{"Count"}\NormalTok{, }\AttributeTok{col =} \StringTok{"darkgreen"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{5}\NormalTok{)}
+\FunctionTok{axis}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{at =} \DecValTok{1}\SpecialCharTok{:}\DecValTok{12}\NormalTok{, }\AttributeTok{labels =}\NormalTok{ total.per.month}\SpecialCharTok{$}\NormalTok{month\_name)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{ChatterjeeA.CS5200.PractI-F23.Rmd--2-_files/figure-latex/plottingAvgPerMonth-1.pdf}
+
+\hypertarget{question-12}{%
+\subsection{Question 12}\label{question-12}}
+
+\hypertarget{dropping-procedure-before-creating-it}{%
+\subsubsection{Dropping procedure before creating
+it}\label{dropping-procedure-before-creating-it}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{DROP} \KeywordTok{PROCEDURE} \ControlFlowTok{IF} \KeywordTok{EXISTS}\NormalTok{ CreateStrike;}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{CREATE} \KeywordTok{PROCEDURE}\NormalTok{ CreateStrike(}
+    \KeywordTok{IN}\NormalTok{ incidentDate }\DataTypeTok{DATE}\NormalTok{,}
+    \KeywordTok{IN}\NormalTok{ airport TEXT,}
+    \KeywordTok{IN}\NormalTok{ state TEXT,}
+    \KeywordTok{IN}\NormalTok{ i\_airline TEXT,}
+    \KeywordTok{IN}\NormalTok{ i\_aircraft TEXT,}
+    \KeywordTok{IN}\NormalTok{ i\_altitude }\DataTypeTok{INT}\NormalTok{,}
+    \KeywordTok{IN}\NormalTok{ isHeavy }\DataTypeTok{BOOLEAN}\NormalTok{,}
+    \KeywordTok{IN}\NormalTok{ numBirds }\DataTypeTok{INT}\NormalTok{,}
+    \KeywordTok{IN}\NormalTok{ i\_impact TEXT,}
+    \KeywordTok{IN}\NormalTok{ i\_damage TEXT,}
+    \KeywordTok{IN}\NormalTok{ incidentCondition TEXT}
+\NormalTok{)}
+\ControlFlowTok{BEGIN}
+
+\CommentTok{{-}{-} Basic idea}
+\CommentTok{{-}{-} 1. Retrieve aid, fid and cid}
+\CommentTok{{-}{-} 2. Check if there is an existing strike}
+\CommentTok{{-}{-} 3. If yes, issue warning and exit}
+\CommentTok{{-}{-} 4. If no, then create the strike, and/or flight, airport, condition}
+
+    \KeywordTok{DECLARE}\NormalTok{ m\_origin }\DataTypeTok{INT}\NormalTok{;}
+    \KeywordTok{DECLARE}\NormalTok{ m\_fid }\DataTypeTok{INT}\NormalTok{;}
+    \KeywordTok{DECLARE}\NormalTok{ m\_cid }\DataTypeTok{INT}\NormalTok{;}
+    \KeywordTok{DECLARE}\NormalTok{ m\_sid }\DataTypeTok{INT}\NormalTok{;}
+    \KeywordTok{DECLARE}\NormalTok{ err }\DataTypeTok{BOOLEAN}\NormalTok{;}
+    
+    \KeywordTok{SET}\NormalTok{ err }\OperatorTok{=} \KeywordTok{FALSE}\NormalTok{;}
+    
+    \KeywordTok{SELECT}\NormalTok{ aid }\KeywordTok{INTO}\NormalTok{ m\_origin }
+    \KeywordTok{FROM}\NormalTok{ airports }
+    \KeywordTok{WHERE}\NormalTok{ airportName }\OperatorTok{=}\NormalTok{ airport }\KeywordTok{AND}\NormalTok{ airportState }\OperatorTok{=}\NormalTok{ state}
+    \KeywordTok{LIMIT} \DecValTok{1}\NormalTok{;}
+    
+    \KeywordTok{SELECT}\NormalTok{ fid }\KeywordTok{INTO}\NormalTok{ m\_fid }
+    \KeywordTok{FROM}\NormalTok{ flights f }
+    \KeywordTok{WHERE}\NormalTok{ f.}\DataTypeTok{date} \OperatorTok{=}\NormalTok{ incidentDate }
+        \KeywordTok{AND} \FunctionTok{LOWER}\NormalTok{(f.airline) }\OperatorTok{=} \FunctionTok{LOWER}\NormalTok{(i\_airline) }
+        \KeywordTok{AND} \FunctionTok{LOWER}\NormalTok{(f.aircraft) }\OperatorTok{=} \FunctionTok{LOWER}\NormalTok{(i\_aircraft) }
+        \KeywordTok{AND}\NormalTok{ f.altitude }\OperatorTok{=}\NormalTok{ i\_altitude }
+        \KeywordTok{AND}\NormalTok{ f.HEAVY }\OperatorTok{=}\NormalTok{ isHeavy }
+    \KeywordTok{LIMIT} \DecValTok{1}\NormalTok{;}
+    
+    \KeywordTok{SELECT}\NormalTok{ cid }\KeywordTok{INTO}\NormalTok{ m\_cid }
+    \KeywordTok{FROM}\NormalTok{ conditions }
+    \KeywordTok{WHERE} \FunctionTok{LOWER}\NormalTok{(sky\_condition) }\OperatorTok{=} \FunctionTok{LOWER}\NormalTok{(incidentCondition) }
+    \KeywordTok{LIMIT} \DecValTok{1}\NormalTok{;}
+    
+    \KeywordTok{SELECT}\NormalTok{ sid }\KeywordTok{INTO}\NormalTok{ m\_sid}
+    \KeywordTok{FROM}\NormalTok{ strikes}
+    \KeywordTok{WHERE}\NormalTok{ fid }\OperatorTok{=}\NormalTok{ m\_fid }\KeywordTok{AND}\NormalTok{ numbirds }\OperatorTok{=}\NormalTok{ numBirds }\KeywordTok{AND} \FunctionTok{LOWER}\NormalTok{(impact) }\OperatorTok{=} \FunctionTok{LOWER}\NormalTok{(i\_impact) }\KeywordTok{AND} \FunctionTok{LOWER}\NormalTok{(damage) }\OperatorTok{=} \FunctionTok{LOWER}\NormalTok{(i\_damage) }\KeywordTok{AND}\NormalTok{ altitude }\OperatorTok{=}\NormalTok{ i\_altitude }\KeywordTok{AND}\NormalTok{ conditions }\OperatorTok{=}\NormalTok{ m\_cid}
+    \KeywordTok{LIMIT} \DecValTok{1}\NormalTok{;}
+    
+    \ControlFlowTok{IF}\NormalTok{ m\_sid }\KeywordTok{IS} \KeywordTok{NOT} \KeywordTok{NULL} \ControlFlowTok{THEN}
+\NormalTok{        SIGNAL SQLSTATE }\StringTok{\textquotesingle{}45000\textquotesingle{}}
+        \KeywordTok{SET}\NormalTok{ MESSAGE\_TEXT }\OperatorTok{=} \StringTok{\textquotesingle{}Denied insertion of duplicate strike\textquotesingle{}}\NormalTok{;}
+        \KeywordTok{SET}\NormalTok{ err }\OperatorTok{=} \KeywordTok{TRUE}\NormalTok{;}
+    \ControlFlowTok{END} \ControlFlowTok{IF}\NormalTok{;}
+    
+    \ControlFlowTok{IF}\NormalTok{ err }\OperatorTok{=} \KeywordTok{FALSE} \ControlFlowTok{THEN}
+      \ControlFlowTok{IF}\NormalTok{ m\_origin }\KeywordTok{IS} \KeywordTok{NULL} \ControlFlowTok{THEN}
+        \KeywordTok{INSERT} \KeywordTok{INTO}\NormalTok{ airports (airportName, airportState) }\KeywordTok{VALUES}\NormalTok{ (airport, state);}
+        \KeywordTok{SET}\NormalTok{ m\_origin }\OperatorTok{=}\NormalTok{ LAST\_INSERT\_ID();}
+    \ControlFlowTok{END} \ControlFlowTok{IF}\NormalTok{;}
+
+    \ControlFlowTok{IF}\NormalTok{ m\_fid }\KeywordTok{IS} \KeywordTok{NULL} \ControlFlowTok{THEN}
+        \KeywordTok{SELECT} \FunctionTok{MAX}\NormalTok{(fid) }\KeywordTok{INTO}\NormalTok{ m\_fid }\KeywordTok{FROM}\NormalTok{ flights;}
+        \KeywordTok{SET}\NormalTok{ m\_fid }\OperatorTok{=}\NormalTok{ m\_fid }\OperatorTok{+} \DecValTok{1}\NormalTok{;}
+        \KeywordTok{INSERT} \KeywordTok{INTO}\NormalTok{ flights (fid, }\DataTypeTok{date}\NormalTok{, origin, airline, aircraft, altitude, HEAVY) }
+        \KeywordTok{VALUES}\NormalTok{ (m\_fid, incidentDate, m\_origin, i\_airline, i\_aircraft, i\_altitude, isHeavy);}
+    \ControlFlowTok{END} \ControlFlowTok{IF}\NormalTok{;}
+
+    \ControlFlowTok{IF}\NormalTok{ m\_cid }\KeywordTok{IS} \KeywordTok{NULL} \ControlFlowTok{THEN}
+        \KeywordTok{INSERT} \KeywordTok{INTO}\NormalTok{ conditions (sky\_condition) }\KeywordTok{VALUES}\NormalTok{ (incidentCondition);}
+        \KeywordTok{SET}\NormalTok{ m\_cid }\OperatorTok{=}\NormalTok{ LAST\_INSERT\_ID();}
+    \ControlFlowTok{END} \ControlFlowTok{IF}\NormalTok{;}
+    
+     \KeywordTok{INSERT} \KeywordTok{INTO}\NormalTok{ strikes (fid, numbirds, impact, damage, altitude, conditions) }
+     \KeywordTok{VALUES}\NormalTok{ (m\_fid, numBirds, i\_impact, i\_damage, i\_altitude, m\_cid);}
+    \ControlFlowTok{END} \ControlFlowTok{IF}\NormalTok{;}
+    
+\ControlFlowTok{END}\NormalTok{;}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{{-}{-} Testing CreateStrike}
+\KeywordTok{CALL}\NormalTok{ CreateStrike(}\StringTok{\textquotesingle{}2012{-}03{-}02\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}Kempegowda Airport\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Bangalore\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}UNITED AIRWAYS\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Airplane\textquotesingle{}}\NormalTok{, }\DecValTok{6970}\NormalTok{, }\KeywordTok{FALSE}\NormalTok{, }\DecValTok{600}\NormalTok{, }\StringTok{\textquotesingle{}None\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}No Damage\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Rainy\textquotesingle{}}\NormalTok{);}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# This R chunk always displays the sid of the last inserted strike}
+\CommentTok{\# If you have inserted a strike, run this to get its sid}
+\NormalTok{sql }\OtherTok{\textless{}{-}} \StringTok{"SELECT MAX(sid) as id FROM strikes;"}
+\NormalTok{res }\OtherTok{\textless{}{-}} \FunctionTok{dbGetQuery}\NormalTok{(dbConn, sql)}
+\FunctionTok{print}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{"The id of the the last inserted strike is"}\NormalTok{, res}\SpecialCharTok{$}\NormalTok{id[[}\DecValTok{1}\NormalTok{]][}\DecValTok{1}\NormalTok{]))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "The id of the the last inserted strike is 25559"
+\end{verbatim}
+
+\hypertarget{disconnecting-from-database}{%
+\subsection{Disconnecting from
+database}\label{disconnecting-from-database}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Disconnecting from the database}
+\NormalTok{status }\OtherTok{\textless{}{-}} \FunctionTok{dbDisconnect}\NormalTok{(dbConn)}
+\ControlFlowTok{if}\NormalTok{ (status) \{}
+  \FunctionTok{print}\NormalTok{(}\StringTok{"Disconnect from DB!"}\NormalTok{)}
+\NormalTok{\} }\ControlFlowTok{else}\NormalTok{ \{}
+  \FunctionTok{print}\NormalTok{(}\StringTok{"Couldn\textquotesingle{}t disconnect!"}\NormalTok{)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Disconnect from DB!"
+\end{verbatim}
+
+\end{document}

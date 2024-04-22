@@ -1,0 +1,7 @@
+"0","library(RSQLite)"
+"0",""
+"0","cwd <- getwd()"
+"0","dbFile <- ""db.sqlite"""
+"0","pathToDb <- paste0(cwd,  .Platform$file.sep, dbFile) # Initializing the db file in the project folder"
+"0","conn <-"
+"0","  dbConnect(RSQLite::SQLite(), pathToDb)"

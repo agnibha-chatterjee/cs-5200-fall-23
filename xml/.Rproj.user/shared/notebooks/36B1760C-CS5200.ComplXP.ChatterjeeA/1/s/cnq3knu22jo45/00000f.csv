@@ -1,0 +1,8 @@
+"0","library(XML)"
+"0","currDir <- getwd()"
+"0","xmlFile <- ""CustomersAndOrders.xml"""
+"0","pathToFile <- paste0(currDir, .Platform$file.sep, xmlFile)"
+"0",""
+"0","# Parsing the XML file"
+"0","# trim is used to trim whitespaces"
+"0","parsedXML <- xmlParse(pathToFile, validate = T, trim = T)"

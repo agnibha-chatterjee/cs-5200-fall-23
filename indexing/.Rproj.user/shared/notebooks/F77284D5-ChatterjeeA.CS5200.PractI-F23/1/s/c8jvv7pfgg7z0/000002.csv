@@ -1,0 +1,6 @@
+"0","-- This SQL chunk creates table conditions
+CREATE TABLE conditions(
+cid INTEGER AUTO_INCREMENT PRIMARY KEY,
+sky_condition TEXT NOT NULL,
+explanation TEXT DEFAULT ''
+);"

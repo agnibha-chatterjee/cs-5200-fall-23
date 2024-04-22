@@ -1,0 +1,95 @@
+---
+title: 'Assignment: Query XML'
+author: Agnibha Chatterjee
+date: Fall 2023
+---
+
+## Question 3
+Add a DTD to the XML that validates the XML
+```{q3, }
+<!DOCTYPE Root [
+        <!ELEMENT Root (Customers, Orders)*>
+        <!ELEMENT Customers (Customer)*>
+        <!ELEMENT Customer (CompanyName, ContactName, ContactTitle, Phone, FullAddress, Fax)*>
+        <!ATTLIST Customer
+                CustomerID ID #REQUIRED>
+        <!ELEMENT CompanyName (#PCDATA)>
+        <!ELEMENT ContactName (#PCDATA)>
+        <!ELEMENT ContactTitle (#PCDATA)>
+        <!ELEMENT Phone (#PCDATA)>
+        <!ELEMENT FullAddress (Address, City, Region, PostalCode, Country)*>
+        <!ELEMENT Address (#PCDATA)>
+        <!ELEMENT City (#PCDATA)>
+        <!ELEMENT Region (#PCDATA)>
+        <!ELEMENT PostalCode (#PCDATA)>
+        <!ELEMENT Country (#PCDATA)>
+        <!ELEMENT Fax (#PCDATA)>
+        <!ELEMENT Orders (Order)*>
+        <!ELEMENT Order (CustomerID, EmployeeID, OrderDate, RequiredDate, ShipInfo)*>
+        <!ELEMENT CustomerID (#PCDATA)>
+        <!ELEMENT EmployeeID (#PCDATA)>
+        <!ELEMENT OrderDate (#PCDATA)>
+        <!ELEMENT RequiredDate (#PCDATA)>
+        <!ELEMENT ShipInfo (ShipVia, Freight, ShipName, ShipAddress, ShipCity, ShipRegion, ShipPostalCode, ShipCountry)*>
+        <!ATTLIST ShipInfo
+                ShippedDate CDATA #IMPLIED>
+        <!ELEMENT ShipVia (#PCDATA)>
+        <!ELEMENT Freight (#PCDATA)>
+        <!ELEMENT ShipName (#PCDATA)>
+        <!ELEMENT ShipAddress (#PCDATA)>
+        <!ELEMENT ShipCity (#PCDATA)>
+        <!ELEMENT ShipRegion (#PCDATA)>
+        <!ELEMENT ShipPostalCode (#PCDATA)>
+        <!ELEMENT ShipCountry (#PCDATA)>
+        ]>
+```
+
+
+## Question 4
+Load the XML with the DTD into R using validation.
+```{r q4, }
+library(XML)
+currDir <- getwd()
+xmlFile <- "CustomersAndOrders.xml"
+pathToFile <- paste0(currDir, .Platform$file.sep, xmlFile)
+
+# Parsing the XML file
+# trim is used to trim whitespaces
+parsedXML <- xmlParse(pathToFile, validate = T, trim = T)
+```
+
+## Question 5
+Execute an XPath expression that returns the names of all customers that do not live in "MA"?
+```{r q5,}
+xpathEx <- "/Root/Customers/Customer[FullAddress/Region != 'MA']/ContactName"
+customerWhoDontLiveInMA <- xpathSApply(parsedXML, xpathEx, xmlValue)
+print(customerWhoDontLiveInMA)
+```
+## Question 6
+Using the result returned in (5), count how many customers there are.
+```{r q6,}
+print(paste('Total no.of customers who do not live in MA = ', length(customerWhoDontLiveInMA)))
+```
+
+## Question 7
+Using a combination of R and XPath, calculate the total amount paid for freight for all orders placed by customer with ID "GREAL".
+```{r q7,}
+xpathEx <- "/Root/Orders/Order[CustomerID='GREAL']/ShipInfo/Freight"
+  
+customerWithIdGreal <- xpathSApply(parsedXML, xpathEx, xmlValue)
+customerWithIdGreal <- as.double(customerWithIdGreal)
+
+print(paste('Total Freight = ', sum(customerWithIdGreal)))
+```
+
+
+## Question 8
+Using a combination of R and XPath, calculate the average amount paid for freight for all orders shipped to the USA.
+```{r q8,}
+xpathEx <- "/Root/Orders/Order[ShipInfo/ShipCountry = 'USA']/ShipInfo/Freight"
+  
+ordersShippedToUS <- xpathSApply(parsedXML, xpathEx, xmlValue)
+ordersShippedToUS <- as.double(ordersShippedToUS)
+
+print(paste('Average Freight = ', mean(ordersShippedToUS)))
+```

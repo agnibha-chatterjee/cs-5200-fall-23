@@ -1,0 +1,313 @@
+---
+title: "Build Triggers"
+author: "Chatterjee, Agnibha"
+date: "Fall 2023"
+---
+  
+##### Connecting to the database
+```{r}
+library(RSQLite)
+cwd <- getwd()
+dbFile <- "MediaDB.db"
+pathToDb <- paste0(cwd,  .Platform$file.sep, dbFile) # Initializing the db file in the project folder
+conn <-
+  dbConnect(RSQLite::SQLite(), pathToDb)
+```
+
+##### Dropping all triggers before creating them
+```{sql connection=conn}
+DROP TRIGGER IF EXISTS test_total_for_positive_values;
+```
+
+```{sql connection=conn}
+DROP TRIGGER IF EXISTS recalculate_total_post_insert;
+```
+
+```{sql connection=conn}
+DROP TRIGGER IF EXISTS recalculate_total_post_update_for_old_record;
+```
+
+```{sql connection=conn}
+DROP TRIGGER IF EXISTS recalculate_total_post_update_for_new_record;
+```
+
+```{sql connection=conn}
+DROP TRIGGER IF EXISTS recalculate_total_post_delete;
+```
+
+
+#### Question 1
+##### Trigger to validate Total
+
+```{sql connection=conn}
+CREATE TRIGGER IF NOT EXISTS test_total_for_positive_values
+BEFORE INSERT ON invoices
+BEGIN
+  SELECT
+    CASE
+      WHEN NEW.Total < 0
+      THEN RAISE (ABORT, 'Total value needs to be a positive value (>= 0)')
+    END;
+  END;
+```
+
+
+#### Question 2
+##### Note: There seems to be no proper way to add a constraint to a column that already exists in SQLite
+Here is my approach for solving question 2
+
+1. Creating a new table called invoices_replica with the total column and associated column constraint
+2. Copying over all the existing data from invoices to invoices_replica
+3. Deleting the existing invoices table
+4. Renaming invoices_replica to invoices
+
+```{sql connection=conn}
+DROP TABLE IF EXISTS invoices_replica;
+```
+
+```{sql connection=conn}
+-- CREATING THE invoices_replica with the constraints
+CREATE TABLE invoices_replica(
+InvoiceId INTEGER NOT NULL PRIMARY KEY,
+CustomerId INTEGER NOT NULL,
+InvoiceDate DATETIME NOT NULL,
+BillingAddress NVARCHAR(70),
+BillingCity NVARCHAR(40),
+BillingState NVARCHAR(40),
+BillingCountry NVARCHAR(40),
+BillingPostalCode NVARCHAR(10),
+-- Adding constraint to Total
+-- Total >= 0 because when a new invoice is made without associated invoice_items, Total will be 0
+Total NUMERIC(10,2) CHECK (Total >= 0.00) DEFAULT 0.00,
+CONSTRAINT cust_id FOREIGN KEY (CustomerId) REFERENCES customers(CustomerId)
+);
+```
+
+```{sql connection=conn}
+-- Inserting values from invoices to invoices_replica
+INSERT INTO invoices_replica
+SELECT * FROM invoices;
+```
+
+```{sql connection=conn}
+-- Dropping invoices
+DROP TABLE IF EXISTS invoices;
+```
+
+```{sql connection=conn}
+-- Renaming invoices_replica to invoices
+ALTER TABLE invoices_replica RENAME TO invoices;
+```
+
+#### Question 3
+##### Post Insert Trigger
+```{sql connection=conn}
+-- Creating a trigger called recalculate_total_post_insert
+CREATE TRIGGER recalculate_total_post_insert
+-- Post Insert Trigger
+AFTER INSERT ON invoice_items
+FOR EACH ROW
+BEGIN
+  -- This updates the Total column of invoices to be the SUM of UnitPrice for the given InvoiceId
+  UPDATE invoices
+    SET total = (
+        SELECT SUM(UnitPrice * Quantity)
+        FROM invoice_items
+        WHERE InvoiceId = NEW.InvoiceId
+    )
+    WHERE InvoiceId = NEW.InvoiceId;
+  END;
+```
+
+#### Question 4
+##### Post Update Trigger (I've created two update triggers for a reason specified in the examples)
+```{sql connection=conn}
+-- Creating a trigger called recalculate_total_post_update_for_new_record
+CREATE TRIGGER recalculate_total_post_update_for_new_record
+-- Post update trigger
+AFTER UPDATE ON invoice_items
+-- Runs for each row
+FOR EACH ROW
+BEGIN
+  -- This updates the Total column of invoices to be the SUM of UnitPrice for the given InvoiceId
+  UPDATE invoices
+    SET total = (
+        SELECT COALESCE(SUM(NEW.UnitPrice * NEW.Quantity), 0)
+        FROM invoice_items
+        WHERE InvoiceId = NEW.InvoiceId
+    )
+    WHERE InvoiceId = NEW.InvoiceId;
+  END;
+```
+
+```{sql connection=conn}
+-- Creating a trigger called recalculate_total_post_update_for_old_record
+CREATE TRIGGER recalculate_total_post_update_for_old_record
+-- Post update trigger
+AFTER UPDATE ON invoice_items
+FOR EACH ROW
+BEGIN
+  -- This updates the Total column of invoices to be the SUM of UnitPrice for the given InvoiceId
+  UPDATE invoices
+    SET total = (
+        SELECT COALESCE(SUM(OLD.UnitPrice * OLD.Quantity), 0)
+        FROM invoice_items
+        WHERE InvoiceId = OLD.InvoiceId 
+    )
+    WHERE InvoiceId = OLD.InvoiceId;
+  END;
+```
+
+##### Post Delete Trigger
+```{sql connection=conn}
+-- Creating a trigger called recalculate_total_post_update_for_old_record
+CREATE TRIGGER recalculate_total_post_delete
+-- Post delete trigger
+AFTER DELETE ON invoice_items
+BEGIN
+  -- This updates the Total column of invoices to be the SUM of UnitPrice for the given InvoiceId
+  UPDATE invoices
+    SET total = (
+        -- In case all invoice_items are deleted, then Total is 0
+        SELECT COALESCE(SUM(OLD.UnitPrice * OLD.Quantity), 0)
+        FROM invoice_items
+        WHERE InvoiceId = OLD.InvoiceId
+    )
+    WHERE InvoiceId = OLD.InvoiceId;
+  END;
+```
+
+
+
+#### Question 5
+##### Demonstrating that the constraint on Total is working as expected
+```{r}
+result <- tryCatch({
+  ### Trying to insert -1 in Total is going to throw an Error
+  sql <- "INSERT INTO invoices
+          VALUES (9000, 2, '2009-01-01 00:00:00', '601 William St', 'California', 'San Jose', 'USA', '94612', -1);"
+  dbGetQuery(conn, sql)
+result <- dbGetQuery(conn, sql)
+}, error = function(e) {
+  print(e)
+}, finally = {
+})
+```
+
+##### Demonstrating that the triggers work as expected
+The Total for InvoiceId 1 is 1.98 by default
+```{sql connection=conn}
+SELECT InvoiceId, Total 
+FROM invoices
+WHERE InvoiceId = 1;
+```
+
+Inserting an item into invoice_items with InvoiceId 1 and UnitPrice 1.99 to increase the Total
+```{sql connection=conn}
+INSERT INTO invoice_items
+VALUES (2250, 1, 7, 1.99, 1);
+```
+
+Verifying that the total for InvoiceId 1 has increased to 3.97 (1.98 + 1.99)
+```{sql connection=conn}
+SELECT InvoiceId, Total 
+FROM invoices
+WHERE InvoiceId = 1;
+```
+
+Updating the UnitPrice of InvoiceLineId 2250 to 0.99\
+Thereby, reducing the Total of InvoiceId 1 by 1\
+So the updated Total for InvoiceId 1 should be 2.97
+```{sql connection=conn}
+UPDATE invoice_items
+SET UnitPrice = 0.99
+WHERE InvoiceLineId = 2250;
+```
+
+Verifying that the Total of InvoiceId 1 is 2.97
+```{sql connection=conn}
+SELECT InvoiceId, Total 
+FROM invoices
+WHERE InvoiceId = 1;
+```
+
+Deleting invoice_item with InvoiceLineId 2250
+```{sql connection=conn}
+DELETE FROM invoice_items
+WHERE InvoiceLineId = 2250;
+```
+
+Verifying that the Total of InvoiceId 1 has gone back to 1.98
+```{sql connection=conn}
+SELECT InvoiceId, Total 
+FROM invoices
+WHERE InvoiceId = 1;
+```
+
+**Note: I'd like to demonstrate a corner case where we assign an existing invoice_item to a different InvoiceId (maybe because it was mistakenly assigned)**
+\
+For example we change the InvoiceId of InvoiceLineId 1 from 1 to 2, then we have to update the Total values for both InvoiceId 1 and InvoiceId 2 - this is why there are two update triggers
+\
+Let's take a look at the Total for InvoiceId 1 and 2
+```{sql connection=conn}
+SELECT InvoiceId, Total 
+FROM invoices
+WHERE InvoiceId IN (1, 2);
+```
+
+Let's look at the invoice_items of InvoiceId 1
+```{sql connection=conn}
+SELECT *
+FROM invoice_items
+WHERE InvoiceId = 1;
+```
+
+Let's change the InvoiceId of InvoiceLineId 1 to 2
+```{sql connection=conn}
+UPDATE invoice_items
+SET InvoiceId = 2
+WHERE InvoiceLineId = 1;
+```
+
+Let's see the update in Total for InvoiceId 1 and InvoiceId 2\
+InvoiceId 1 should've reduced by 0.99 and InvoiceId 2 should have increased by 0.99
+```{sql connection=conn}
+SELECT InvoiceId, Total 
+FROM invoices
+WHERE InvoiceId IN (1, 2);
+```
+
+**Another corner case is where we delete all invoice_items related to an invoice, right now InvoiceId 1 has only one invoice_item**\
+We can see that here
+```{sql connection=conn}
+SELECT * 
+FROM invoice_items
+WHERE InvoiceId = 1;
+```
+
+Let's delete it
+```{sql connection=conn}
+DELETE FROM invoice_items
+WHERE InvoiceLineId = 2;
+```
+
+Now the Total of InvoiceId 1 should be zero
+```{sql connection=conn}
+SELECT InvoiceId, Total 
+FROM invoices
+WHERE InvoiceId = 1;
+```
+
+##### Resetting values so that it can be tested again
+1. Setting InvoiceLineId 1 back to Invoice 1
+```{sql connection=conn}
+UPDATE invoice_items
+SET InvoiceId = 1
+WHERE InvoiceLineId = 1;
+```
+
+2. Re-inserting InvoiceLineId 2
+```{sql connection=conn}
+INSERT INTO invoice_items VALUES (2, 1, 4, 0.99, 1)
+```
+

@@ -1,0 +1,117 @@
+---
+title: "Assignment: Query a Database with SQL"
+author: "Agnibha Chatterjee"
+date: "10/09/2023"
+---
+
+```{r}
+library(RSQLite)
+
+cwd <- getwd()
+dbFile <- "MediaDB.db"
+pathToDb <- paste0(cwd,  .Platform$file.sep, dbFile) # Initializing the db file in the project folder
+conn <-
+  dbConnect(RSQLite::SQLite(), pathToDb)
+```
+
+##### Question 1
+```{sql connection=conn}
+SELECT LastName, Title, HireDate
+  FROM employees;
+```
+
+##### Question 2
+```{sql connection=conn}
+SELECT al.Title, COUNT(DISTINCT(tr.GenreId)) as distinct_genres
+  FROM albums al
+  INNER JOIN tracks tr ON tr.AlbumId = al.AlbumId
+GROUP BY al.AlbumId;
+```
+
+##### Question 3
+```{sql connection=conn}
+SELECT g.Name, COUNT(*) as number_of_tracks
+FROM tracks t
+JOIN genres g ON g.GenreId = t.GenreId
+GROUP BY t.GenreId
+HAVING COUNT(*) >= 3
+ORDER BY COUNT(*) DESC;
+```
+
+##### Question 4
+```{sql connection=conn}
+SELECT 
+	AVG(CAST(STRFTIME('%Y', DATE('now')) AS INTEGER) - CAST(STRFTIME('%Y', BirthDate) AS INTEGER)) AS average_age_of_employees 
+FROM employees e;
+```
+
+##### Question 5
+```{sql connection=conn}
+SELECT BillingState, COUNT(DISTINCT(InvoiceId)) AS unique_purchases_in_state
+FROM invoices
+WHERE BillingCountry = 'Brazil'
+GROUP BY BillingState
+ORDER BY BillingState ASC;
+```
+
+##### Question 6
+```{sql connection=conn}
+SELECT COUNT(EmployeeId) AS employee_count
+FROM employees
+WHERE EmployeeId NOT IN (
+	SELECT SupportRepId
+  	FROM customers
+);
+```
+
+##### Question 7
+```{sql connection=conn}
+SELECT Count(*) as album_count
+FROM albums
+WHERE LOWER(Title) LIKE '%rock%' AND Title NOT LIKE '%hard%';
+```
+
+##### Question 8
+```{sql connection=conn}
+SELECT mt.Name, ROUND(SUM(milliseconds / (1000.0 * 3600.0)), 1) time_in_hours 
+FROM tracks tr
+INNER JOIN media_types mt ON mt.MediaTypeId = tr.MediaTypeId
+GROUP BY tr.MediaTypeId
+HAVING COUNT(tr.MediaTypeId) >= 1;
+```
+
+##### Question 9
+```{sql connection=conn}
+SELECT g.Name as genre_with_most_tracks, COUNT(tr.GenreId) as no_of_tracks
+FROM tracks tr
+INNER JOIN genres g ON g.GenreId = tr.GenreId
+GROUP BY tr.GenreId
+ORDER BY COUNT(tr.GenreId) DESC
+LIMIT 1;
+```
+
+
+##### Question 10
+```{r}
+sql <- "SELECT g.GenreId, g.Name, tr.UnitPrice
+        FROM tracks tr
+        INNER JOIN genres g ON g.GenreId = tr.GenreId"
+
+result <- dbGetQuery(conn, sql)
+
+unitPriceMean <- mean(result[['UnitPrice']]) 
+unitPriceSD <- sd(result[['UnitPrice']])
+
+ciLowerBound <- unitPriceMean - (1.96 * unitPriceSD)
+ciUpperBound <- unitPriceMean + (1.96 * unitPriceSD)
+
+# Rounding off ciLowerBound and cuUpperBound to 1 decimal place because that's the specified output format
+# Specified output format - The 95% CI for the mean unit price ranges from 88.3 to 109.2
+msg <- paste('The 95% CI for the mean unit price ranges from', format(round(ciLowerBound, 1), nsmall = 1), 'to', format(round(ciUpperBound, 1), nsmall = 1)) 
+print(msg)
+```
+
+
+```{r}
+dbDisconnect(conn)
+```

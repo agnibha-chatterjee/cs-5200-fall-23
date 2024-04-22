@@ -1,0 +1,64 @@
+<!DOCTYPE Grants [
+  <!ELEMENT Grants (Grant*, Researcher*)>
+  <!ELEMENT Grant (gdate, type)>
+  <!ATTLIST Grant gid ID #REQUIRED>
+  <!ATTLIST Grant ridFKs IDREFS #IMPLIED>
+  <!ELEMENT gdate (#PCDATA)>
+  <!ELEMENT type (#PCDATA)>
+  <!ELEMENT Researcher (name, affiliation)>
+  <!ATTLIST Researcher rid ID #REQUIRED>
+  <!ATTLIST Researcher gidFKs IDREFS #REQUIRED>
+  <!ELEMENT name (#PCDATA)>
+  <!ELEMENT affiliation (#PCDATA)>
+]>
+
+<Grants>
+  <Grant gid="g101" ridFKs="r201">
+    <gdate>09/21/2002</gdate>
+    <type>industry</type>
+  </Grant>
+  <Grant gid="g102" ridFKs="r203">
+    <gdate>05/11/2009</gdate>
+    <type>industry</type>
+  </Grant>
+  <Grant gid="g103" ridFKs="r204">
+    <gdate>07/12/2004</gdate>
+    <type>industry</type>
+  </Grant>
+  <Grant gid="g104" ridFKs="r205">
+    <gdate>04/03/2011</gdate>
+    <type>government</type>
+  </Grant>
+  <Grant gid="g105" ridFKs="r203 r204 r205">
+    <gdate>10/16/2007</gdate>
+    <type>industry</type>
+  </Grant>
+  <Grant gid="g106" ridFKs="r206">
+    <gdate>11/17/2003</gdate>
+    <type>industry</type>
+  </Grant>
+  <Researcher rid="r201" gidFKs="g101">
+    <name>Agnibha Chatterjee</name>
+    <affiliation>Northeastern University</affiliation>
+  </Researcher>
+  <Researcher rid="r202" gidFKs="g101">
+    <name>Priyam Sahoo</name>
+    <affiliation>University of Illinois - Urbana Champaign</affiliation>
+  </Researcher>
+  <Researcher rid="r203" gidFKs="g102 g106">
+    <name>Riwtik Badola</name>
+    <affiliation>Indian Institute of Technology - Madras</affiliation>
+  </Researcher>
+  <Researcher rid="r204" gidFKs="g103 g105">
+    <name>Akhil Surendran</name>
+    <affiliation>University of Southern California</affiliation>
+  </Researcher>
+  <Researcher rid="r205" gidFKs="g104 g105">
+    <name>Dedipyaman Das</name>
+    <affiliation>Stamford University</affiliation>
+  </Researcher>
+  <Researcher rid="r206" gidFKs="g106">
+    <name>Manmohit Grewal</name>
+    <affiliation>Northeastern University</affiliation>
+  </Researcher>
+</Grants>

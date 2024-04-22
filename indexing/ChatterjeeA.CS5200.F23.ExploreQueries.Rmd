@@ -1,0 +1,169 @@
+---
+title: "Assignment / Explore Query Planning and Indexing"
+author: "Agnibha Chatterjee"
+date: "Fall Full 2023"
+output: pdf_document
+---
+
+## Connecting to database
+```{r connectingToDb,}
+library(RSQLite)
+library(DBI)
+
+cwd <- getwd()
+dbFile <- "sakila.db"
+pathToDb <- paste0(cwd,  .Platform$file.sep, dbFile) 
+conn <- dbConnect(RSQLite::SQLite(), pathToDb)
+```
+## Question 1
+### Dropping all user-defined indexes
+```{r droppingIndexes, }
+sqlStmt <- "DROP INDEX IF EXISTS TitleIndex";
+dbSendStatement(conn, sqlStmt)
+```
+
+```{r question1,}
+query <- "SELECT language.name AS language, COUNT(film.film_id) AS no_of_films 
+          FROM film
+          JOIN language ON language.language_id = film.language_id
+          GROUP BY language.language_id;
+          "
+result <- dbGetQuery(conn, query)
+print(result)
+```
+
+## Question 2
+```{r question2,}
+query <- "EXPLAIN QUERY PLAN
+          SELECT language.name AS language, COUNT(film.film_id) AS no_of_films 
+          FROM film
+          JOIN language ON language.language_id = film.language_id
+          GROUP BY language.name;
+          "
+result <- dbGetQuery(conn, query)
+print(result$detail)
+```
+## Question 3
+```{r question3,}
+query <- "SELECT film.title as film_name, category.name as category_name, film.length
+          FROM film
+          JOIN film_category ON film_category.film_id = film.film_id 
+          AND film.title = 'ZORRO ARK'
+          JOIN category ON category.category_id = film_category.category_id;
+         "
+result <- dbGetQuery(conn, query)
+print(result)
+```
+
+## Question 4
+```{r question4,}
+query <- "EXPLAIN QUERY PLAN
+          SELECT film.title as film_name, category.name as category_name, film.length
+          FROM film
+          JOIN film_category ON film_category.film_id = film.film_id 
+          AND film.title = 'ZORRO ARK'
+          JOIN category ON category.category_id = film_category.category_id;
+         "
+result <- dbGetQuery(conn, query)
+print(result$detail)
+```
+
+## Question 5
+```{r question5,}
+sqlStmt <- "CREATE INDEX TitleIndex 
+          ON film (title);
+         "
+result <- dbSendQuery(conn, sqlStmt)
+print(result)
+```
+## Question 6
+```{r question6,}
+query <- "EXPLAIN QUERY PLAN
+          SELECT film.title as film_name, category.name as category_name, film.length
+          FROM film
+          JOIN film_category ON film_category.film_id = film.film_id 
+          AND film.title = 'ZORRO ARK'
+          JOIN category ON category.category_id = film_category.category_id;
+         "
+result <- dbGetQuery(conn, query)
+print(result$detail)
+```
+
+## Question 7
+The query plan for q6 is different from the one used in q4 because the primary plan displayed above was to use `TitleIndex`. We can confirm that the index was considered because the output says "SEARCH film USING INDEX TitleIndex".
+
+## Question 8
+```{r question8DropIndex, }
+sqlStmt <- "DROP INDEX TitleIndex";
+dbSendStatement(conn, sqlStmt)
+```
+
+```{r question8MeasureTimeWithoutIndex,}
+start.time <- Sys.time()
+query <- "SELECT film.title as film_name, category.name as category_name, film.length
+          FROM film
+          JOIN film_category ON film_category.film_id = film.film_id 
+          AND film.title = 'ZORRO ARK'
+          JOIN category ON category.category_id = film_category.category_id;
+         "
+result <- dbGetQuery(conn, query)
+end.time <- Sys.time()
+time.diff <- end.time - start.time
+print(paste("Execution time (without index)", round((time.diff),3), "sec"))
+```
+
+```{r question8CreateIndex,}
+sqlStmt <- "CREATE INDEX TitleIndex 
+            ON film (title);
+           "
+result <- dbSendQuery(conn, sqlStmt)
+print(result)
+```
+
+```{r question8MeasureTimeWithIndex,}
+start.time <- Sys.time()
+query <- "SELECT f.title as film_name, c.name as category_name, length
+          FROM film f
+          JOIN film_category fc ON fc.film_id = f.film_id 
+          AND f.title = 'ZORRO ARK'
+          JOIN category c ON c.category_id = fc.category_id;
+         "
+result <- dbGetQuery(conn, query)
+end.time <- Sys.time()
+time.diff.index <- end.time - start.time
+print(paste("Execution time (with index)", round((time.diff),3), "sec"))
+print(paste("Time diff", time.diff - time.diff.index, "sec"))
+```
+We can observe that the time difference between the query without an index and the query with an index is greater than 0, which indicates that fetching the results without an index took longer than fetching them with an index. Although the time difference is relatively small in this case due to the small number of rows in the film table (1,000 rows), the impact of the index would be significantly more noticeable when dealing with a larger table with more number of rows to be scanned.
+
+## Question 9
+```{r question9}
+query <- "
+      SELECT film.title, language.name, film.length
+      FROM film
+      JOIN language ON language.language_id = film.language_id 
+      AND LOWER(film.title) LIKE '%gold%';
+         "
+result <- dbGetQuery(conn, query)
+print(result)
+```
+
+## Question 10
+```{r question10}
+query <- "
+      EXPLAIN QUERY PLAN
+      SELECT film.title, language.name, film.length
+      FROM film
+      JOIN language ON language.language_id = film.language_id 
+      AND LOWER(film.title) LIKE '%gold%';
+         "
+result <- dbGetQuery(conn, query)
+print(result$detail)
+```
+The reason this query doesn't use `TitleIndex` is the use of the LIKE operator. The LIKE operator's ability to accommodate wildcards introduces complexity for the optimizer in pinpointing the index rows that match the query conditions. To illustrate, consider the query WHERE title LIKE '%GOLD.' In this case, an index scan cannot be used because the optimizer cannot determine which index rows commence with the term "GOLD." Similarly, a query like WHERE title LIKE 'GOLD%' cannot make use of an index scan because the optimizer cannot identify which index rows conclude with the term "GOLD". A full table scan is performed in this case.
+
+## Disconnecting from database
+```{r disconnectingFromDB,}
+dbDisconnect(conn)
+```
+

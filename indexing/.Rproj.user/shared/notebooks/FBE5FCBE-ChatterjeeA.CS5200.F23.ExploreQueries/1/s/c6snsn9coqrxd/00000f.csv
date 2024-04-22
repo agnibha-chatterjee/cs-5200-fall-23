@@ -1,0 +1,3 @@
+"0","query <- ""SELECT * FROM language;"""
+"0","result <- dbGetQuery(conn, query)"
+"0","print(result)"

@@ -1,0 +1,6 @@
+"0","-- This SQL chunk add a foreign key constraint on strikes
+ALTER TABLE strikes
+ADD CONSTRAINT fk_fid
+FOREIGN KEY (fid) REFERENCES flights(fid)
+ON DELETE CASCADE
+ON UPDATE CASCADE;"

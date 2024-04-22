@@ -1,0 +1,7 @@
+"0","library(RSQLite)"
+"0","library(DBI)"
+"0",""
+"0","cwd <- getwd()"
+"0","dbFile <- ""sakila.db"""
+"0","pathToDb <- paste0(cwd,  .Platform$file.sep, dbFile) "
+"0","conn <- dbConnect(RSQLite::SQLite(), pathToDb)"

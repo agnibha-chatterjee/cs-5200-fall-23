@@ -1,0 +1,141 @@
+---
+title: 'Assignment 3: Implementing a Relation Database'
+author: 'Agnibha Chatterjee'
+---
+\
+
+#### Creating a database called db.sqlite in the R project
+```{r}
+library(RSQLite)
+
+cwd <- getwd()
+dbFile <- "db.sqlite"
+pathToDb <- paste0(cwd,  .Platform$file.sep, dbFile) # Initializing the db file in the project folder
+conn <-
+  dbConnect(RSQLite::SQLite(), pathToDb)
+```
+\
+
+#### Dropping all required tables before creating them
+```{sql connection = conn}
+DROP TABLE IF EXISTS visit;
+```
+
+```{sql connection = conn}
+DROP TABLE IF EXISTS visit_guest_junction;
+```
+
+```{sql connection = conn}
+DROP TABLE IF EXISTS guest;
+```
+\
+
+#### Assumptions
+- The length of a credit card number must be 16
+- The length of a credit card CCV is 3
+- The numGuests attribute in Visit must be at least 1, this is because logically it makes sense for a visit to have 1 or more guests, another way of saying this is that a visit must have a visitor
+- The name of a guest must have at least 2 characters
+
+\
+
+#### Creating tables
+```{sql connection = conn}
+CREATE TABLE visit(
+   vid NUMERIC NOT NULL PRIMARY KEY,
+   numGuests INTEGER NOT NULL CHECK(numGuests >= 1),
+   date DATE NOT NULL,
+   time TIME NOT NULL
+);
+```
+\
+
+###### Note: I wanted to implement a check on the expirationdate attribute which would be expirationdate > todaysDate and on doing some research, I figured out that a check like expirationdate DATE NOT NULL CHECK(expirationdate > DATE('now')) would not be possible in sqlite and it threw the following error when I try inserting rows after creating the guest table with the above check constraint. 
+
+> Error: non-deterministic use of date() in a CHECK constraint\
+> Failed to execute SQL chunk
+
+###### A possible implementation of this would be through Triggers, but that is outside the scope of this assignment and so I'm excluding any check on the expirationdate attribute 
+
+```{sql connection = conn}
+CREATE TABLE guest(
+    gid TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL CHECK(LENGTH(name) >= 2),
+    creditcard NUMERIC NOT NULL CHECK(LENGTH(CAST(creditcard AS TEXT)) = 16),
+    expirationdate DATE NOT NULL,
+    CCV NUMERIC NOT NULL CHECK(LENGTH(CAST(CCV AS TEXT)) = 3)
+);
+```
+
+
+```{sql connection = conn}
+CREATE TABLE visit_guest_junction (
+    junc_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    visit_id NUMERIC NOT NULL,
+    guest_id TEXT NOT NULL,
+    CONSTRAINT fk_visit_vid FOREIGN KEY (visit_id) REFERENCES visit(vid) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_guest_gid FOREIGN KEY (guest_id) REFERENCES guest(gid) ON DELETE CASCADE ON UPDATE CASCADE
+);
+```
+\
+
+#### (OPTIONAL & MAYBE USED FOR TESTING) Inserting values into respective tables
+```{sql connection = conn}
+INSERT INTO visit(vid, numGuests, date, time)
+  VALUES
+    (1, 1, '2023-10-01', '12:00:00.000'),
+    (2, 2, '2022-11-12', '13:00:00.000'),
+    (3, 5, '2023-01-01', '14:00:00.000'),
+    (4, 1, '2023-09-21', '15:00:00.000'),
+    (5, 3, '2023-09-21', '16:00:00.000'),
+    (6, 3, '2023-07-11', '17:00:00.000'),
+    (7, 2, '2023-07-11', '18:00:00.000'),
+    (8, 4, '2023-04-09', '19:00:00.000'),
+    (9, 9, '2023-11-08', '20:00:00.000'),
+    (10, 2, '2023-03-16', '21:00:00.000'),
+    (11, 2, '2023-02-21', '22:00:00.000'),
+    (12, 4, '2023-05-29', '23:00:00.000');
+```
+
+
+```{sql connection = conn}
+INSERT INTO guest(gid, name, creditcard, expirationdate, CCV)
+  VALUES
+    ('1', 'Susie', 1111222233334444, '2022-10-01', 123),
+    ('2', 'Beth', 2121323243435454, '2022-10-01', 123),
+    ('3', 'Agni', 1324354657687980, '2022-10-01', 123),
+    ('4', 'Tom', 1122334422332211, '2022-10-01', 123),
+    ('5', 'Kumar', 1101222233334444, '2022-10-01', 123),
+    ('6', 'Harold', 9898342321232124, '2022-10-01', 123),
+    ('7', 'Katherine', 9990008777666411, '2022-10-01', 123),
+    ('8', 'Lionel', 1111722233334444, '2022-10-01', 123),
+    ('9', 'Rajeev', 1111222233374444, '2022-10-01', 123),
+    ('10', 'Ronaldo', 1110222233334444, '2022-10-01', 123),
+    ('11', 'Rossi', 1111222239334444, '2022-10-01', 123);
+```
+\
+
+##### Enabling foreign constraint before inserting values into the junction table
+```{sql connection = conn}
+PRAGMA foreign_keys = ON;
+```
+
+Inserting values into the junction table
+Here, I'm inserting rows that exist in both **visit** and **guest**.
+To test the foreign key constraint you could enter a value such as (30, '30') which is invalid because there isn't any row in the **visit** with vid 30 and same is the case with **guest** (this will work with my testing data) 
+
+```{sql connection = conn}
+INSERT INTO visit_guest_junction(visit_id, guest_id)
+  VALUES
+    (1, '1'),
+    (2, '2'),
+    (3, '3'),
+    (4, '4'),
+    (5, '5'),
+    (6, '6');
+```
+\
+
+#### Dropping connection after all operations have been performed
+```{r}
+dbDisconnect(conn)
+```

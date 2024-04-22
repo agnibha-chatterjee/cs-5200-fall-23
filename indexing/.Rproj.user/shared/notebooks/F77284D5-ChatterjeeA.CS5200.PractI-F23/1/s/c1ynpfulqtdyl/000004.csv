@@ -1,0 +1,15 @@
+"0","-- This SQL chunk creates table strikes
+CREATE TABLE strikes(
+sid INTEGER AUTO_INCREMENT PRIMARY KEY,
+fid INTEGER NOT NULL,
+numbirds INTEGER NOT NULL,
+impact TEXT NOT NULL ,
+damage TEXT NOT NULL,
+altitude INTEGER NOT NULL DEFAULT 999999,
+conditions INTEGER,
+CHECK (altitude >= 0),
+CONSTRAINT fk_conditions
+FOREIGN KEY (conditions) REFERENCES conditions(cid)
+ON DELETE CASCADE
+ON UPDATE CASCADE
+);"

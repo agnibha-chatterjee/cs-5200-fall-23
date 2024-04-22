@@ -1,0 +1,7 @@
+"0","query <- ""SELECT language.name AS language, COUNT(film.film_id) AS no_of_films "
+"0","          FROM film"
+"0","          JOIN language ON language.language_id = film.language_id"
+"0","          GROUP BY language.language_id;"
+"0","          """
+"0","result <- dbGetQuery(conn, query)"
+"0","print(result)"
